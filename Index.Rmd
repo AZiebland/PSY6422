@@ -36,6 +36,8 @@ Happiness data sourced from [World Happiness Report](https://worldhappiness.repo
 
 Average national income sourced from [The United Nations Development Programme](https://hdr.undp.org/data-center/human-development-index#/indicies/HDI) (Accessed on: 01-03-2023)
 
+Average income data was sourced from the human development index. Gross National Income (GNI) per capita is one measurement of the human development index, a summary measurement of three key dimensions of human development including healthy life, education and standard of living. 
+
 ## **Data Preparation**
 ### Loading Packages
 ```{r, message=FALSE}
