@@ -198,16 +198,13 @@ world_map <- map_data("world")
 world_map <- subset(world_map, region != "Antarctica")
 
 #Recoding country names to match data
-as.factor(HappinessReport$Country) %>% levels()
-
 HappinessReport$Country <- recode(HappinessReport$Country, 
                                   'United States' = 'USA', 
                                   'United Kingdom' = 'UK')
 
-#Wrapping legend title
+#Wrapping legend title for plotted map
 name <- c("Average Happiness Score")
 name <- str_wrap(name, width = 5)
-  
 ```
 
 #### Plotting the choropleth map
@@ -300,6 +297,7 @@ Joined_Data <- left_join(Happiness2021, Average_Income, by = "Country") %>%
 
 #### Plotting top 10 richest countries on average in 2021
 ```{r}
+#----------------------------PLOTTING RICHEST COUNTRIES--------------------------------------------
 #Arranging average income in descending order and selecting first 10
 MostRich <- Joined_Data %>% 
             arrange(desc(Average.Income)) %>% 
@@ -325,10 +323,13 @@ p_rich <- p_rich +
                 panel.border = element_blank(), 
                 legend.position="none")
 
+#Saving the plot
+ggsave(here("Figures", "Top 10 Richest Countries.pdf"), plot = p_rich)
 ```
 
 #### Plotting top 10 poorest countries on average in 2021
 ```{r}
+#-------------------------------PLOTTING POOREST COUNTRIES--------------------------------------------
 #Arranging data in ascending order and selecting first 10
 MostPoor <- Joined_Data %>% 
     arrange(Average.Income) %>% 
@@ -355,6 +356,8 @@ p_poor <- p_poor +
                 panel.border = element_blank(),
                 legend.position="none")
 
+#Saving the plot
+ggsave(here("Figures", "Top 10 Poorest Countries.pdf"), plot = p_poor)
 ```
 The decision was made to make the scale the same for both graphs to show the dramatic difference in average income between the top 10 richest countries and the top 10 poorest countries. 
 
@@ -391,7 +394,7 @@ Joined_Data <- Joined_Data %>%
                                "Happiness Score: ", round(Happiness_Score, 3), "\n",
                                "Average Income: ", dollar(Average.Income)))
 #Creating scatterplot - ggiraph package is used to make scatterplot interactive - when mouse hovers over points on the plot, country name, happiness score and average income will be visible
-gg_point <- ggplot(Joined_Data, aes(Average.Income, Happiness_Score)) + 
+p_both <- ggplot(Joined_Data, aes(Average.Income, Happiness_Score)) + 
             geom_point_interactive(aes(col = continent, #Make scatterplot with hover text
                                        tooltip = tooltip_text)) +
             geom_smooth(method="lm", formula= y ~ log(x), se = FALSE, color = "black", size = 0.5) + #Add logarithmic regression line
@@ -405,7 +408,10 @@ gg_point <- ggplot(Joined_Data, aes(Average.Income, Happiness_Score)) +
                  plot.title.position = "plot") #Move title position
 
 #Display interactive graph with girafe() function             
-girafe(ggobj = gg_point)
+girafe(ggobj = p_both)
+
+#Saving the plot 
+ggsave(here("Figures", "Average Income and Happiness Score.pdf"), plot = p_both)
 ```
 
 **Aim 4 = Is there a relationship between average income and overall happiness?**  
