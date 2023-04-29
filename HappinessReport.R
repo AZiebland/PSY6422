@@ -163,7 +163,6 @@ for(i in 1:11) {
   ggsave(here("Figures", file=paste0("plot_", 2010 + i,".png")))
 }
 
-
 #-----------------------Loading average income dataset----------------------------------------------
 #Loading the data
 Average_Income <- read.csv("Data/HumanDevelopmentReport.csv")
