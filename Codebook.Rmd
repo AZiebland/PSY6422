@@ -1,0 +1,14 @@
+---
+title: "Codebook"
+output: html_notebook
+
+---
+
+#Load packages
+library(haven)
+library(sjlabelled)
+
+#Show content of variables
+get_label(HappinessReport)
+get_label(Average_Income)
+
