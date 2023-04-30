@@ -5,57 +5,77 @@ output:
   html_document: default
 ---
 
-
+# Codebook for Happiness Report dataset 
 ```{r}
 #Load packages
-library(haven)
+#install.packages("Hmisc")
+#install.packages("labelled")
+library(Hmisc)
 library(labelled)
 library(tibble)
 
+#Create duplicate data set
 HappinessReport2 <- HappinessReport
 
+#Creating descriptive labels for variables
 my_labels1 <- c(Country = "Country of the happiness rating",
                Year = "Year that the happiness score was recorded",
                Happiness_Score = "Happiness score based on the Cantril ladder scale, measuring well being as a continuum where 10 is the best possible life, and 0 is the worst possible life")
 
+#Assigning descriptive label to variable
 label(HappinessReport2) <- as.list(my_labels1[match(names(HappinessReport2),
                                                     names(my_labels1))])
 
-
-Average_Income2 <- Average_Income
-
-my_labels2 <- c(Country = "Country of the average income",
-                Average.Income = "Gross National Income (GNI) per capita, measured in American dollars ($). Each income has been corrected using purchasing power parity to adjust for the differences in cost of living between countries")
-
-label(Average_Income2) <- as.list(my_labels2[match(names(Average_Income2),
-                                                   names(my_labels2))])
-
-
+#Extract labels and form a new dataframe
 codebook <- enframe(label(HappinessReport2))
 
+#Rename columns
 colnames(codebook) <- c("Variable_ID", "Description")
 
+#Add column for class of variables
 codebook <- codebook %>% 
   mutate(Type = map_chr(HappinessReport, class))
 
+#Reorder columns in dataframe
 col_order <- c("Variable_ID", "Type", "Description")
 codebook <- codebook[, col_order]
 
+```
+
+# Codebook for Average Income dataset
+```{r}
+#Create duplicate data set
+Average_Income2 <- Average_Income
+
+#Create descriptive labels for variables
+my_labels2 <- c(Country = "Country of the average income",
+                Average.Income = "Gross National Income (GNI) per capita, measured in American dollars ($). Each income has been corrected using purchasing power parity to adjust for the differences in cost of living between countries")
+
+#Assigning descriptive labels to variables
+label(Average_Income2) <- as.list(my_labels2[match(names(Average_Income2),
+                                                   names(my_labels2))])
+
+#Extract labels and form a new dataframe
 codebook2 <- enframe(label(Average_Income2))
 
+#Rename columns
 colnames(codebook2) <- c("Variable_ID", "Description")
 
+#Add column for class of variables
 codebook2 <- codebook2 %>% 
   mutate(Type = map_chr(Average_Income, class))
 
+#Reorder columns in dataframe
 col_order <- c("Variable_ID", "Type", "Description")
 codebook2 <- codebook2[, col_order]
-
-full_join(codebook, codebook2)
 ```
 
+# Saving codebook to csv format
 ```{r}
-view(codebook) 
-```
+#Joining codebooks for both data sets
+final_codebook <- full_join(codebook, codebook2)
 
+#Saving codebook to csv format
+write_csv(final_codebook, "./data/codebook.csv")
+```
 
