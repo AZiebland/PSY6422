@@ -58,6 +58,9 @@ library(gifski) #Used to create animated GIF
 library(countrycode) #Converts country names into continent
 library(scales) #Used to add dollar sign to labels
 library(ggiraph) #Used to create interactive scatterplot with hover text
+library(Hmisc)
+library(labelled)
+library(tibble)
 ```
 
 ### Loading Happiness Data
@@ -91,6 +94,38 @@ HappinessReport <- HappinessReport[HappinessReport$Year >= "2011" &
 #Show first few rows of processed data
 head(HappinessReport)
 ```
+
+```{r, echo = FALSE}
+
+#Create duplicate data set
+HappinessReport2 <- HappinessReport
+
+#Creating descriptive labes for variables
+my_labels1 <- c(Country = "Country of the happiness rating",
+               Year = "Year that the happiness score was recorded",
+               Happiness_Score = "Happiness score based on the Cantril ladder scale, measuring well being as a continuum where 10 is the best possible life, and 0 is the worst possible life")
+
+#Assigning descriptive label to variable
+label(HappinessReport2) <- as.list(my_labels1[match(names(HappinessReport2),
+                                                    names(my_labels1))])
+
+#Extract labels and form a new dataframe
+codebook <- enframe(label(HappinessReport2))
+
+#Rename columns
+colnames(codebook) <- c("Variable_ID", "Description")
+
+#Add column for class of variables
+codebook <- codebook %>% 
+  mutate(Type = map_chr(HappinessReport, class))
+
+#Reorder columns in dataframe
+col_order <- c("Variable_ID", "Type", "Description")
+codebook <- codebook[, col_order]
+
+head(codebook)
+```
+
 
 ## **Visualisation 1: Happiest and Least Happy Countries on Average Between 2011-2021**
 For the first visualisation, the average happiness score was calculated for each country to identify which countries are the happiest and the least happy between 2011-2021.

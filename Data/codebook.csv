@@ -1,0 +1,6 @@
+Variable_ID,Type,Description
+Country,character,Country of the happiness rating
+Year,numeric,Year that the happiness score was recorded
+Happiness_Score,numeric,"Happiness score based on the Cantril ladder scale, measuring well being as a continuum where 10 is the best possible life, and 0 is the worst possible life"
+Country,character,Country of the average income
+Average.Income,numeric,"Gross National Income (GNI) per capita, measured in American dollars ($). Each income has been corrected using purchasing power parity to adjust for the differences in cost of living between countries"

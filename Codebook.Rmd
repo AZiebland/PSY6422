@@ -1,14 +1,61 @@
 ---
 title: "Codebook"
-output: html_notebook
-
+output:
+  pdf_document: default
+  html_document: default
 ---
 
+
+```{r}
 #Load packages
 library(haven)
-library(sjlabelled)
+library(labelled)
+library(tibble)
 
-#Show content of variables
-get_label(HappinessReport)
-get_label(Average_Income)
+HappinessReport2 <- HappinessReport
+
+my_labels1 <- c(Country = "Country of the happiness rating",
+               Year = "Year that the happiness score was recorded",
+               Happiness_Score = "Happiness score based on the Cantril ladder scale, measuring well being as a continuum where 10 is the best possible life, and 0 is the worst possible life")
+
+label(HappinessReport2) <- as.list(my_labels1[match(names(HappinessReport2),
+                                                    names(my_labels1))])
+
+
+Average_Income2 <- Average_Income
+
+my_labels2 <- c(Country = "Country of the average income",
+                Average.Income = "Gross National Income (GNI) per capita, measured in American dollars ($). Each income has been corrected using purchasing power parity to adjust for the differences in cost of living between countries")
+
+label(Average_Income2) <- as.list(my_labels2[match(names(Average_Income2),
+                                                   names(my_labels2))])
+
+
+codebook <- enframe(label(HappinessReport2))
+
+colnames(codebook) <- c("Variable_ID", "Description")
+
+codebook <- codebook %>% 
+  mutate(Type = map_chr(HappinessReport, class))
+
+col_order <- c("Variable_ID", "Type", "Description")
+codebook <- codebook[, col_order]
+
+codebook2 <- enframe(label(Average_Income2))
+
+colnames(codebook2) <- c("Variable_ID", "Description")
+
+codebook2 <- codebook2 %>% 
+  mutate(Type = map_chr(Average_Income, class))
+
+col_order <- c("Variable_ID", "Type", "Description")
+codebook2 <- codebook2[, col_order]
+
+full_join(codebook, codebook2)
+```
+
+```{r}
+view(codebook) 
+```
+
 
