@@ -15,6 +15,14 @@ subtitle: PSY6422 Project
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
+```{r, echo=FALSE, fig.align='center'}
+#Path image
+imagepath <- '/Users/millieziebland/Documents/Uni/Semester 2/PSY6422 Data Analysis and Visualisation/PSY6422 Project/Figures/Buy_Happiness.jpeg'
+
+#Display image
+knitr::include_graphics(imagepath)
+```
+
 # **Background** 
 The World Happiness Report has reviewed the state of happiness across the world since 2011. The report makes use of life evaluations from Gallup World Poll data which provide the basis of the happiness rankings. Life evaluation questions are assessed using the Cantril ladder which asks respondents to think of a ladder, where 10 is the best possible life and 0 is the worst possible life. Six variables are used to explain the variation of happiness levels across the countries. These include, GDP per capita, social support, life expectancy, freedom, generosity, and corruption. 
 
@@ -122,9 +130,9 @@ p_top10 <- ggplot(Top10, aes(Country, Happiness_Score, fill = Happiness_Score)) 
 p_top10 <- p_top10 +           #Adding geom layer to ggplot 
            geom_col() +        #Plotting x and y as a bar chart
            coord_flip() +      #Making the bars horizontal
-           scale_fill_gradient2(low = "#99CCFF", high = "#0033FF", mid = "#6699FF", 
+           scale_fill_gradient2(low = "#FFF9C4", high = "#FFEB3B", mid = "#FFF176", 
            midpoint = median(Top10$Happiness_Score)) +    #Filling the bars based on happiness score
-           geom_text(aes(label = round(Happiness_Score, 3)), nudge_y = -.55, color = "white") + #Add score on bar
+           geom_text(aes(label = round(Happiness_Score, 3)), nudge_y = -.55, color = "black") + #Add score on bar
            labs(title = "Top 10 Happiest Countries on Average Between 2011-2021", #Adding labels
            subtitle = "0 = Worst Possible Life, 10 = Best Possible Life", 
            y = "Average Happiness Score", 
@@ -155,9 +163,9 @@ p_least10 <- p_least10 +  #Adding geom layer to ggplot
              geom_col() +  #Plotting x and y as bar chart
              coord_flip() +  #Making the bars horizontal
              ylim(0, 8) +  #Setting y axis scale to match top 10 happiest countries
-             scale_fill_gradient2(low = "#FF9999", high = "#FF0033", mid = "#FF6666", 
+             scale_fill_gradient2(low = "#BBDEFB", high = "#0D47A1", mid = "#2196F3",
              midpoint = median(Least10$Happiness_Score)) +  #Filling bars based on happiness score
-             geom_text(aes(label = round(Happiness_Score, 3)), nudge_y = -.55, color = "white") + #Add score on bar
+             geom_text(aes(label = round(Happiness_Score, 3)), nudge_y = -.55, color = "black") + #Add score on bar
              labs(title = "Top 10 Least Happy Countries on Average Between 2011-2021", #Adding labels
              subtitle = "0 = Worst Possible Life, 10 = Best Possible Life", 
              y = "Average Happiness Score", 
@@ -248,7 +256,8 @@ for(i in 1:11) {
   #Plotting happiness scores onto the map
   p_out <- p + geom_map(map = World_Map_Joined, aes(map_id = region, fill = Happiness_Score), 
            linewidth = 0.25) + #Plotting happiness score onto map
-           scale_fill_gradient(low = "#fff7bc", high = "#cc4c02", name = name, limits = c(2, 8)) + #Filling countries based on happiness score
+           scale_fill_gradient2(low = "#0D47A1", high = "#FFEB3B", mid = "#BBDEFB", midpoint = 5, 
+                                name = name, limits = c(2, 8)) + #Filling countries based on happiness score
            coord_fixed(1.5) #Fixing aspect ratio
   
   print(p_out)
@@ -260,7 +269,7 @@ for(i in 1:11) {
 ```
 
 **Aim 2 = How has happiness changed over the last 10 years?**  
-The choropleth map shows that North America, Oceania and Europe have had consistently high happiness ratings over the last 10 years. For example, it is difficult to notice the change in colour of Australia, suggesting little change in happiness ratings over the years. In contrast, there is a lot of inconsistency in scores for countries located in Africa and Asia, made visible by the clear changes in colour. 
+The use of the gradient colour scale ranging from blue (representing sadness) to yellow (representing happiness), shows the substantial variation in happiness ratings across the world. The choropleth map shows that North America, Oceania and Europe have had consistently high happiness ratings over the last 10 years. In contrast, there is a lot of inconsistency in scores for countries located in Africa and Asia, made visible by the purple/blue colours as well as the frequent changes in colour. 
 
 ## **Visualisation 3: Top 10 Richest and Poorest Countries on Average in 2021**
 Next, the average national income per capita data is loaded to visualise the relationship with happiness ratings.
@@ -434,5 +443,12 @@ It would seem that money *can* buy happiness but only up to a certain point. The
 It is important to consider other factors which may also be contributing to the happiness scores as happiness isn't entirely dependent on money. The countries with the lowest happiness ratings are mainly third world countries whilst the highest rated countries are mostly first world countries and consequently, there might be many other factors contributing to the happiness scores. Other contributing factors may include war, quality of life, health etc. 
 
 The happiness data set included several variables which contributed to the overall happiness score but due to the time constraints of this module, only the overall happiness score was visualised. Future visualisations using this data could explore the contributors to the happiness score to see which variables had the biggest impact on well-being. 
+
+## **References**
+Freeland, Z. (2019). *Can money buy happiness? It sure can.* [Image]. Vox. https://www.vox.com/the-highlight/2019/11/13/20951937/money-experiences-buy-happiness-happy-how-to-spend
+
+Kahneman, D., & Deaton, A. (2010). High income improves evaluation of life but not emotional well-being. *Proceedings of the national academy of sciences, 107*(38), 16489-16493. https://doi.org/10.1073/pnas.1011492107
+
+Suliman, A. (2023, March 8). *Can money buy happiness? Scientists say it can.* The Washington Post. https://www.washingtonpost.com/business/2023/03/08/money-wealth-happiness-study/
 
 The rMarkdown file along with all the files needed to reproduce this analysis can be found on [GitHub](https://github.com/AZiebland/PSY6422)

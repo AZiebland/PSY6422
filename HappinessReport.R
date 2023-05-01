@@ -106,22 +106,7 @@ p_least10 <- p_least10 +  #Adding geom layer to ggplot
 #Saving the plot
 ggsave(here("Figures", "Top 10 Least Happy Countries.pdf"), plot = p_least10)
 
-#----------------Creating choropleth map of world happiness over 10 years---------------------
-#Loading world map
-world_map <- map_data("world")
-
-#Remove Antarctica 
-world_map <- subset(world_map, region != "Antarctica")
-
-#Recoding country names to match data
-HappinessReport$Country <- recode(HappinessReport$Country, 
-                                  'United States' = 'USA', 
-                                  'United Kingdom' = 'UK')
-
-#Wrapping legend title
-name <- c("Average Happiness Score")
-name <- str_wrap(name, width = 5)
-
+#---------------------------------PLOTTING CHOROPLETH MAP----------------------------------------------
 #The following line of code was included in the rmarkdown file to combine the plots into a GIF {r, animation.hook='gifski', interval=1, fig.align='center', out.width="110%"}
 
 #For loop to create choropleth map for each year
@@ -141,21 +126,21 @@ for(i in 1:11) {
   
   #Creating the choropleth plot
   p <- ggplot(World_Map_Joined, aes(long, lat)) + #Adding mappings to ggplot
-        geom_map(dat = world_map, map = world_map, #Plotting countries on map
-                 aes(map_id = region), fill = "white", color = 'grey', linewidth = 0.25) + #Filling in the countries
-        labs(title = sprintf("World Happiness Report: %s", Year[i]), #Adding labels
-             subtitle = "0 = Worst Possible Life, 10 = Best Possible Life",
-             caption = "Source: World Happiness Report, Gallup World Poll") +
-        theme(plot.title = element_text(face = "bold"),
-              axis.title = element_blank(), #Removing x and y labels
-              axis.text.x = element_blank(), 
-              axis.text.y = element_blank())
+    geom_map(dat = world_map, map = world_map, #Plotting countries on map
+             aes(map_id = region), fill = "white", color = 'grey', linewidth = 0.25) + #Filling in the countries
+    labs(title = sprintf("World Happiness Report: %s", Year[i]), #Adding labels
+         subtitle = "Life Evaluation based on Cantril Ladder where 0 = Worst Possible Life, 10 = Best Possible Life",
+         caption = "Source: World Happiness Report, Gallup World Poll") +
+    theme(plot.title = element_text(face = "bold"),
+          axis.title = element_blank(), #Removing x and y labels
+          axis.text.x = element_blank(), 
+          axis.text.y = element_blank())
   
   #Plotting happiness scores onto the map
   p_out <- p + geom_map(map = World_Map_Joined, aes(map_id = region, fill = Happiness_Score), 
                         linewidth = 0.25) + #Plotting happiness score onto map
-                scale_fill_gradient(low = "#fff7bc", high = "#cc4c02", name = name, limits = c(2, 8)) + #Filling countries based on happiness score
-                coord_fixed(1.5) #Fixing aspect ratio
+    scale_fill_gradient(low = "blue", high = "#FAFA33", name = name, limits = c(2, 8)) + #Filling countries based on happiness score
+    coord_fixed(1.5) #Fixing aspect ratio
   
   print(p_out)
   
