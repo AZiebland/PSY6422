@@ -48,29 +48,29 @@ Average <- HappinessReport %>%
 #--------------------------------PLOTTING HAPPIEST COUNTRIES-----------------------------------
 #Select top 10 happiest countries on average
 Top10 <- Average %>% 
-          arrange(desc(Happiness_Score)) %>% #Arrange happiness score in descending order
-            slice(1:10) %>% #Select the first 10 data points
-              arrange(Happiness_Score) %>% #Rearranging happiness score so highest score is plotted first
-                mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
+  arrange(desc(Happiness_Score)) %>% #Arrange happiness score in descending order
+  slice(1:10) %>% #Select the first 10 data points
+  arrange(Happiness_Score) %>% #Rearranging happiness score so highest score is plotted first
+  mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
 
 #Plot top 10 happiest countries
 p_top10 <- ggplot(Top10, aes(Country, Happiness_Score, fill = Happiness_Score)) #Adding mappings to ggplot
 
 p_top10 <- p_top10 +           #Adding geom layer to ggplot 
-           geom_col() +        #Plotting x and y as a bar chart
-           coord_flip() +      #Making the bars horizontal
-           scale_fill_gradient2(low = "#99CCFF", high = "#0033FF", mid = "#6699FF", 
-                                midpoint = median(Top10$Happiness_Score)) +  #Filling the bars based on happiness score
-           geom_text(aes(label = round(Happiness_Score, 3)), nudge_y = -.55, color = "white") + #Add score on bar
-           labs(title = "Top 10 Happiest Countries on Average Between 2011-2021", 
-           subtitle = "0 = Worst Possible Life, 10 = Best Possible Life", 
-           y = "Average Happiness Score", 
-           caption = "Source: World Happiness Report, Gallup World Poll") + 
-           theme_bw() + #Setting plot theme: remove legend, move title to left, remove background
-           theme(plot.title = element_text(face = "bold"), 
-                 plot.title.position = "plot",
-                 panel.border = element_blank(), 
-                 legend.position="none") 
+  geom_col() +        #Plotting x and y as a bar chart
+  coord_flip() +      #Making the bars horizontal
+  scale_fill_gradient2(low = "#FFF9C4", high = "#FFEB3B", mid = "#FFF176", 
+                       midpoint = median(Top10$Happiness_Score)) +    #Filling the bars based on happiness score
+  geom_text(aes(label = round(Happiness_Score, 3)), nudge_y = -.55, color = "black") + #Add score on bar
+  labs(title = "Top 10 Happiest Countries on Average Between 2011-2021", #Adding labels
+       subtitle = "0 = Worst Possible Life, 10 = Best Possible Life", 
+       y = "Average Happiness Score", 
+       caption = "Source: World Happiness Report, Gallup World Poll") + 
+  theme_bw() + #Setting plot theme: bold title, move title, remove background, remove legend
+  theme(plot.title = element_text(face = "bold"), 
+        plot.title.position = "plot",
+        panel.border = element_blank(), 
+        legend.position="none") 
 
 #Saving the plot
 ggsave(here("Figures", "Top 10 Happiest Countries.pdf"), plot = p_top10)
@@ -78,36 +78,52 @@ ggsave(here("Figures", "Top 10 Happiest Countries.pdf"), plot = p_top10)
 #----------------------------PLOTTING LEAST HAPPY COUNTRIES-------------------------------------
 #Finding top 10 least happy countries
 Least10 <- Average %>% 
-            arrange(Happiness_Score) %>%  #Arrange happiness score in ascending order
-             slice(1:10) %>% #Select the first 10 data points
-              arrange(desc(Happiness_Score)) %>% #Rearranging scores so they are plotted from lowest to highest
-                mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
+  arrange(Happiness_Score) %>%  #Arrange happiness score in ascending order
+  slice(1:10) %>% #Select the first 10 data points
+  arrange(desc(Happiness_Score)) %>% #Rearranging scores so they are plotted from lowest to highest
+  mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
 
 #Plotting top 10 least happy countries
 p_least10 <- ggplot(Least10, aes(Country, Happiness_Score, fill = Happiness_Score)) #Adding mappings to ggplot
 
 p_least10 <- p_least10 +  #Adding geom layer to ggplot
-             geom_col() +  #Plotting x and y as bar chart
-             coord_flip() +  #Making the bars horizontal
-             ylim(0, 8) +  #Setting y axis scale to match top 10 happiest countries
-             scale_fill_gradient2(low = "#FF9999", high = "#FF0033", mid = "#FF6666", 
-                                  midpoint = median(Least10$Happiness_Score)) +  #Filling bars based on happiness score
-             geom_text(aes(label = round(Happiness_Score, 3)), nudge_y = -.55, color = "white") + #Add score on bar
-             labs(title = "Top 10 Least Happy Countries on Average Between 2011-2021", #Adding labels
-                  subtitle = "0 = Worst Possible Life, 10 = Best Possible Life", 
-                  y = "Average Happiness Score", 
-                  caption = "Source: World Happiness Report, Gallup World Poll") + 
-             theme_bw() +  #Setting plot theme: remove legend, move title to left, remove background
-             theme(plot.title = element_text(face = "bold"),
-                   plot.title.position = "plot",
-                   panel.border = element_blank(),
-                   legend.position="none")
+  geom_col() +  #Plotting x and y as bar chart
+  coord_flip() +  #Making the bars horizontal
+  ylim(0, 8) +  #Setting y axis scale to match top 10 happiest countries
+  scale_fill_gradient2(low = "#0D47A1", high = "#BBDEFB", mid = "#2196F3",
+                       midpoint = median(Least10$Happiness_Score)) +  #Filling bars based on happiness score
+  geom_text(aes(label = round(Happiness_Score, 3)), nudge_y = -.55, color = "black") + #Add score on bar
+  labs(title = "Top 10 Least Happy Countries on Average Between 2011-2021", #Adding labels
+       subtitle = "0 = Worst Possible Life, 10 = Best Possible Life", 
+       y = "Average Happiness Score", 
+       caption = "Source: World Happiness Report, Gallup World Poll") + 
+  theme_bw() +  #Setting plot theme: bold title, move title, remove background, remove legend
+  theme(plot.title = element_text(face = "bold"),
+        plot.title.position = "plot",
+        panel.border = element_blank(),
+        legend.position="none")
 
 #Saving the plot
 ggsave(here("Figures", "Top 10 Least Happy Countries.pdf"), plot = p_least10)
 
+#---------------------------------PLOTTING WORLD MAP-------------------------------------------------
+#Loading world map
+world_map <- map_data("world")
+
+#Remove Antarctica 
+world_map <- subset(world_map, region != "Antarctica")
+
+#Recoding country names to match data
+HappinessReport$Country <- recode(HappinessReport$Country, 
+                                  'United States' = 'USA', 
+                                  'United Kingdom' = 'UK')
+
 #---------------------------------PLOTTING CHOROPLETH MAP----------------------------------------------
 #The following line of code was included in the rmarkdown file to combine the plots into a GIF {r, animation.hook='gifski', interval=1, fig.align='center', out.width="110%"}
+
+#Wrapping legend title for plotted map
+name <- c("Average Happiness Score")
+name <- str_wrap(name, width = 5)
 
 #For loop to create choropleth map for each year
 Year <- list("2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021")

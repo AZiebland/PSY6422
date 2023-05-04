@@ -9,10 +9,8 @@ output:
 ```{r}
 #Load packages
 #install.packages("Hmisc")
-#install.packages("labelled")
-library(Hmisc)
-library(labelled)
-library(tibble)
+library(Hmisc) #Used to add labels to variables
+library(tibble) #Extract labels from data frame and add into new column
 
 #Create duplicate data set
 HappinessReport2 <- HappinessReport
