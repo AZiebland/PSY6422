@@ -1,11 +1,12 @@
 ---
 title: "Can Money Buy Happiness?"
 author: '220225410'
-date: "2023-03-29"
 output:
   html_document:
     df_print: paged
   pdf_document: default
+extra_dependencies: animate
+always_allow_html: yes
 subtitle: PSY6422 Project
 ---
 
@@ -45,69 +46,6 @@ Average national income sourced from [The United Nations Development Programme](
 
 Average income data was sourced from the human development index. Gross National Income (GNI) per capita is one measurement of the human development index, a summary measurement of three key dimensions of human development including healthy life, education and standard of living. 
 
-## **Codebook**
-```{r, echo=FALSE}
-#----------------------------------------Codebook for Happiness Data-------------------------------------------------
-#Create duplicate data set
-HappinessReport2 <- HappinessReport
-
-#Creating descriptive labels for variables
-my_labels1 <- c(Country = "Country of the happiness rating",
-               Year = "Year that the happiness score was recorded",
-               Happiness_Score = "Happiness score based on the Cantril ladder scale, measuring well being as a continuum where 10 is the best possible life, and 0 is the worst possible life")
-
-#Assigning descriptive label to variable
-label(HappinessReport2) <- as.list(my_labels1[match(names(HappinessReport2),
-                                                    names(my_labels1))])
-
-#Extract labels and form a new dataframe
-codebook <- enframe(label(HappinessReport2))
-
-#Rename columns
-colnames(codebook) <- c("Variable_ID", "Description")
-
-#Add column for class of variables and reorder
-codebook <- codebook %>% 
-              mutate(Type = map_chr(HappinessReport, class))
-
-#Reorder columns in dataframe
-col_order <- c("Variable_ID", "Type", "Description")
-codebook <- codebook[, col_order]
-
-#----------------------------------Average Income Codebook-----------------------------------------------------
-#Create duplicate data set
-Average_Income2 <- Average_Income
-
-#Create descriptive labels for variables
-my_labels2 <- c(Country = "Country of the average income",
-                Average.Income = "Gross National Income (GNI) per capita, measured in American dollars ($). Each income has been corrected using purchasing power parity to adjust for the differences in cost of living between countries")
-
-#Assigning descriptive labels to variables
-label(Average_Income2) <- as.list(my_labels2[match(names(Average_Income2),
-                                                   names(my_labels2))])
-
-#Extract labels and form a new dataframe
-codebook2 <- enframe(label(Average_Income2))
-
-#Rename columns
-colnames(codebook2) <- c("Variable_ID", "Description")
-
-#Add column for class of variables
-codebook2 <- codebook2 %>% 
-  mutate(Type = map_chr(Average_Income, class))
-
-#Reorder columns in dataframe
-col_order <- c("Variable_ID", "Type", "Description")
-codebook2 <- codebook2[, col_order]
-
-#Joining codebooks for both data sets
-final_codebook <- full_join(codebook, codebook2)
-
-#Saving codebook to csv format
-write_csv(final_codebook, "./data/codebook.csv")
-knitr::kable(final_codebook)
-```
-
 ## **Data Preparation**
 ### Loading Packages
 ```{r, message=FALSE}
@@ -135,7 +73,7 @@ library(tibble) #Extract labels from data frame and add into new column
 
 ### Loading Happiness Data
 ```{r}
-#------------------------LOADING THE DATA--------------------------------------------------------
+#------------------------------LOADING THE DATA--------------------------------------------------------
 #Loading happiness data
 Happiness <- read_xls("Data/WorldHappinessReport.xls")
 
@@ -143,7 +81,7 @@ Happiness <- read_xls("Data/WorldHappinessReport.xls")
 head(Happiness)
 ```
 
-### **Data Wrangling**
+### Data Wrangling
 The data set includes several variables which contribute to the overall measurement of well-being, but for this visualisation the main focus will be the overall life ladder score and the relationship between average national income per capita provided by another data set. Therefore, the variables selected are country, year and life ladder.
 
 The data was filtered to 2011-2021 to focus on 10 years of happiness ratings. This filtered out many missing data points as more countries joined the World Happiness Report in subsequent years.
@@ -165,6 +103,37 @@ HappinessReport <- HappinessReport[HappinessReport$Year >= "2011" &
 head(HappinessReport)
 ```
 
+### Codebook
+```{r, echo=FALSE}
+#Create duplicate data set
+HappinessReport2 <- HappinessReport
+
+#Creating descriptive labels for variables
+my_labels1 <- c(Country = "Country of the happiness rating",
+               Year = "Year that the happiness score was recorded",
+               Happiness_Score = "Happiness score based on the Cantril ladder scale, measuring well being as a continuum where 10 is the best possible life, and 0 is the worst possible life")
+
+#Assigning descriptive label to variable
+label(HappinessReport2) <- as.list(my_labels1[match(names(HappinessReport2),
+                                                    names(my_labels1))])
+
+#Extract labels and form a new dataframe
+codebook <- enframe(label(HappinessReport2))
+
+#Rename columns
+colnames(codebook) <- c("Variable_ID", "Description")
+
+#Add column for class of variables
+codebook <- codebook %>% 
+  mutate(Type = map_chr(HappinessReport, class))
+
+#Reorder columns in dataframe
+col_order <- c("Variable_ID", "Type", "Description")
+codebook <- codebook[, col_order]
+
+knitr::kable(codebook)
+```
+
 ## **Visualisation 1: Happiest and Least Happy Countries on Average Between 2011-2021**
 For the first visualisation, the average happiness score was calculated for each country to identify which countries are the happiest and the least happy between 2011-2021.
 
@@ -177,7 +146,7 @@ Average <- HappinessReport %>%
               list(Happiness_Score = mean)) #Specify summary statistics as computing mean
 ```
 
-#### Creating a bar chart of the top 10 happiest countries on average
+### Creating a Bar Chart of The Top 10 Happiest Countries on Average
 ```{r}
 #Select top 10 happiest countries on average
 Top10 <- Average %>% 
@@ -210,7 +179,7 @@ ggsave(here("Figures", "Top 10 Happiest Countries.png"), plot = p_top10)
 
 ```
 
-#### Creating a bar chart of the top 10 least happy countries on average
+### Creating a Bar Chart of The Top 10 Least Happy Countries on Average
 ```{r}
 #Finding top 10 least happy countries
 Least10 <- Average %>% 
@@ -258,7 +227,7 @@ The second visualisation focuses on how happiness ratings have changed over time
 
 There were several missing data points for various countries, but the decision was made not to create averages for these missing points. It was likely that the data was unable to be collected either due to war or natural disaster etc. and therefore, creating an average of surrounding data points for the missing point would not be a true reflection of the happiness score for that year. Consequently, these points have been left blank and show up as grey on the map.  
 
-#### Loading the world map
+### Loading The World Map
 ```{r, echo=TRUE, results='hide'}
 #---------------------------------PLOTTING WORLD MAP-------------------------------------------------
 #Loading world map
@@ -273,7 +242,7 @@ HappinessReport$Country <- recode(HappinessReport$Country,
                                   'United Kingdom' = 'UK')
 ```
 
-#### Plotting the choropleth map
+### Plotting the Choropleth Map
 ```{r, animation.hook='gifski', interval=1, fig.align='center', out.width="110%"}
 #---------------------------------PLOTTING CHOROPLETH MAP----------------------------------------------
 #The following line of code was included in the rmarkdown code block to combine the plots into a GIF {r, animation.hook='gifski', interval=1, fig.align='center', out.width="110%"}
@@ -303,8 +272,7 @@ for(i in 1:11) {
        geom_map(dat = world_map, map = world_map, #Plotting countries on map
        aes(map_id = region), fill = "white", color = 'grey', linewidth = 0.25) + #Filling in the countries
        labs(title = sprintf("World Happiness Report: %s", Year[i]), #Adding labels
-       subtitle = "Life Evaluation based on Cantril Ladder where 0 = Worst Possible Life, 
-       10 = Best Possible Life",
+       subtitle = "Life Evaluation based on Cantril Ladder where 0 = Worst Possible Life, 10 = Best Possible Life",
        caption = "Source: World Happiness Report, Gallup World Poll") +
        theme(plot.title = element_text(face = "bold"),
              axis.title = element_blank(), #Removing x and y labels
@@ -332,7 +300,7 @@ The use of the gradient colour scale ranging from blue (representing sadness) to
 ## **Visualisation 3: Top 10 Richest and Poorest Countries on Average in 2021**
 Next, the average national income per capita data is loaded to visualise the relationship with happiness ratings.
 
-### Loading the data
+### Loading Average Income Data
 ```{r}
 #---------------------------------LOADING AVERAGE INCOME DATA------------------------------------
 #Loading the data
@@ -371,7 +339,43 @@ Joined_Data <- left_join(Happiness2021, Average_Income, by = "Country") %>%
 head(Joined_Data)
 ```
 
-#### Plotting top 10 richest countries on average in 2021
+### Codebook
+```{r, echo=FALSE}
+#Create duplicate data set
+Average_Income2 <- Average_Income
+
+#Create descriptive labels for variables
+my_labels2 <- c(Country = "Country of the average income",
+                Average.Income = "Gross National Income (GNI) per capita, measured in American dollars ($). Each income has been corrected using purchasing power parity to adjust for the differences in cost of living between countries")
+
+#Assigning descriptive labels to variables
+label(Average_Income2) <- as.list(my_labels2[match(names(Average_Income2),
+                                                   names(my_labels2))])
+
+#Extract labels and form a new dataframe
+codebook2 <- enframe(label(Average_Income2))
+
+#Rename columns
+colnames(codebook2) <- c("Variable_ID", "Description")
+
+#Add column for class of variables
+codebook2 <- codebook2 %>% 
+  mutate(Type = map_chr(Average_Income, class))
+
+#Reorder columns in dataframe
+col_order <- c("Variable_ID", "Type", "Description")
+codebook2 <- codebook2[, col_order]
+
+knitr::kable(codebook2)
+
+#Joining codebooks for both data sets
+final_codebook <- full_join(codebook, codebook2)
+
+#Saving codebook to csv format
+write_csv(final_codebook, "./data/codebook.csv")
+```
+
+### Plotting Top 10 Richest Countries on Average in 2021
 ```{r}
 #----------------------------PLOTTING RICHEST COUNTRIES--------------------------------------------
 #Selecting countries with highest incomes
@@ -403,7 +407,7 @@ p_rich <- p_rich + #Adding geom layer to ggplot
 ggsave(here("Figures", "Top 10 Richest Countries.png"), plot = p_rich)
 ```
 
-#### Plotting top 10 poorest countries on average in 2021
+### Plotting Top 10 Poorest Countries on Average in 2021
 ```{r}
 #-------------------------------PLOTTING POOREST COUNTRIES--------------------------------------------
 #Arranging data in ascending order and selecting first 10
@@ -449,7 +453,7 @@ The decision was made to make the scale the same for both graphs to show the dra
 ## **Visualisation 4: The Relationship Between Average Income and Happiness Score**
 The previous visualisations point towards a potential relationship between average income and happiness score. Therefore, the last visualisation includes a scatterplot of the two variables to help identify if there is a relationship between them. 
 
-#### Creating scatterplot of average income against happiness score
+### Creating Scatterplot of Average Income Against Happiness Score
 ```{r plot, fig.align='center'}
 #Adding column with continent to display colour coded points on the scatterplot
 Joined_Data$continent <- countrycode(sourcevar = Joined_Data$Country, 
@@ -477,11 +481,13 @@ p_both <- ggplot(Joined_Data, aes(Average.Income, Happiness_Score)) +
            theme(plot.title = element_text(face = "bold"), #Make title bold
                  plot.title.position = "plot") #Move title position
 
-#Display interactive graph with girafe() function             
-girafe(ggobj = p_both)
-
 #Saving the plot 
 ggsave(here("Figures", "Average Income and Happiness Score.png"), plot = p_both)
+```
+
+```{r, echo=FALSE}
+#Display interactive graph with girafe() function             
+girafe(ggobj = p_both)
 ```
 
 **Aim 4 = Is there a relationship between average income and overall happiness?**  
@@ -495,7 +501,7 @@ It is important to consider other factors which may also be contributing to the 
 
 The happiness data set included several variables which contributed to the overall happiness score but due to the time constraints of this module, only the overall happiness score was visualised. Future visualisations using this data could explore the contributors to the happiness score to see which variables had the biggest impact on well-being. 
 
-## **References**
+### **References**
 Freeland, Z. (2019). *Can money buy happiness? It sure can.* [Image]. Vox. https://www.vox.com/the-highlight/2019/11/13/20951937/money-experiences-buy-happiness-happy-how-to-spend
 
 Kahneman, D., & Deaton, A. (2010). High income improves evaluation of life but not emotional well-being. *Proceedings of the national academy of sciences, 107*(38), 16489-16493. https://doi.org/10.1073/pnas.1011492107
