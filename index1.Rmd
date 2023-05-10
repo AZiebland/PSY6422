@@ -1,6 +1,6 @@
 ---
 title: "Can Money Buy Happiness?"
-author: '220225410'
+author: 'Amelia Ziebland'
 output:
   pdf_document: default
   includes:
@@ -157,22 +157,29 @@ Average <- HappinessReport %>%
 ```{r, p_top10}
 #Select top 10 happiest countries on average
 Top10 <- Average %>% 
-            arrange(desc(Happiness_Score)) %>% #Arrange happiness score in descending order
-            slice(1:10) %>% #Select the first 10 data points
-            arrange(Happiness_Score) %>% #Rearranging happiness score so highest score is plotted first
-            mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
+            #Arrange happiness score in descending order
+            arrange(desc(Happiness_Score)) %>% 
+            #Select the first 10 data points
+            slice(1:10) %>% 
+            #Rearranging happiness score so highest score is plotted first
+            arrange(Happiness_Score) %>% 
+            #Mutate country column to display correct order
+            mutate(Country = factor(Country, levels = Country)) 
 
 #Plot top 10 happiest countries
-p_top10 <- ggplot(Top10, aes(Country, Happiness_Score, fill = Happiness_Score)) #Add mappings to ggplot
+#Add mappings to ggplot
+p_top10 <- ggplot(Top10, aes(Country, Happiness_Score, fill = Happiness_Score)) 
 
 p_top10 <- p_top10 +           #Add geom layer to ggplot 
            geom_col() +        #Plot x and y as a bar chart
            coord_flip() +      #Making the bars horizontal
+           #Fill bars based on happiness score
            scale_fill_gradient2(low = "#FFF9C4", high = "#FFEB3B", mid = "#FFF176", 
-           midpoint = median(Top10$Happiness_Score)) + #Fill the bars based on happiness score
-           geom_text(aes(label = round(Happiness_Score, 3)), 
-                     nudge_y = -.55, color = "black") + #Add score on bar
-           labs(title = "Top 10 Happiest Countries on Average Between 2011-2021", #Add labels
+           midpoint = median(Top10$Happiness_Score)) + 
+           geom_text(aes(label = round(Happiness_Score, 3)), #Add score on bar
+                     nudge_y = -.55, color = "black") + 
+           #Add labels
+           labs(title = "Top 10 Happiest Countries on Average Between 2011-2021", 
            subtitle = "0 = Worst Possible Life, 10 = Best Possible Life", 
            y = "Average Happiness Score", 
            caption = "Source: World Happiness Report, Gallup World Poll") + 
@@ -191,23 +198,30 @@ ggsave(here("Figures", "Top 10 Happiest Countries.png"), plot = p_top10)
 ```{r, p_least10}
 #Finding top 10 least happy countries
 Least10 <- Average %>% 
-              arrange(Happiness_Score) %>%  #Arrange happiness score in ascending order
-              slice(1:10) %>% #Select the first 10 data points
-  arrange(desc(Happiness_Score)) %>% #Rearranging scores so they are plotted from lowest to highest
-              mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
+              #Arrange happiness score in ascending order
+              arrange(Happiness_Score) %>%  
+              #Select the first 10 data points
+              slice(1:10) %>% 
+              #Rearranging scores so they are plotted from lowest to highest
+              arrange(desc(Happiness_Score)) %>% 
+              #Mutate country column to display correct order
+              mutate(Country = factor(Country, levels = Country)) 
 
 #Plotting top 10 least happy countries
-p_least10 <- ggplot(Least10, aes(Country, Happiness_Score, fill = Happiness_Score)) #Add mappings to ggplot
+#Add mappings to ggplot
+p_least10 <- ggplot(Least10, aes(Country, Happiness_Score, fill = Happiness_Score)) 
 
 p_least10 <- p_least10 +  #Add geom layer to ggplot
              geom_col() +  #Plot x and y as bar chart
              coord_flip() +  #Making the bars horizontal
              ylim(0, 8) +  #Set y axis scale to match top 10 happiest countries
+             #Fill bars based on happiness score
              scale_fill_gradient2(low = "#0D47A1", high = "#BBDEFB", mid = "#2196F3",
-             midpoint = median(Least10$Happiness_Score)) +  #Fill bars based on happiness score
+             midpoint = median(Least10$Happiness_Score)) +  
              geom_text(aes(label = round(Happiness_Score, 3)), 
                        nudge_y = -.55, color = "black") + #Add score on bar
-             labs(title = "Top 10 Least Happy Countries on Average Between 2011-2021", #Add labels
+             #Add labels
+             labs(title = "Top 10 Least Happy Countries on Average Between 2011-2021",
              subtitle = "0 = Worst Possible Life, 10 = Best Possible Life", 
              y = "Average Happiness Score", 
              caption = "Source: World Happiness Report, Gallup World Poll") + 
@@ -221,7 +235,7 @@ p_least10 <- p_least10 +  #Add geom layer to ggplot
 ggsave(here("Figures", "Top 10 Least Happy Countries.png"), plot = p_least10)
 
 #The following was included in the rMarkdown code block to plot each graph side by side 
-#{r, echo=FALSE, figures-side, fig.show="hold", out.width="50%"}
+#{r, echo=FALSE, fig.show="hold", out.width="50%"}
 ```
 
 ```{r, show plot, echo=FALSE, fig.show="hold", out.width="55%"}
@@ -279,7 +293,8 @@ for(i in 1:11) {
   #Creating the choropleth plot
   p <- ggplot(World_Map_Joined, aes(long, lat)) + #Adding mappings to ggplot
        geom_map(dat = world_map, map = world_map, #Plotting countries on map
-       aes(map_id = region), fill = "white", color = 'grey', linewidth = 0.25) + #Filling in the countries
+       #Filling in the countries
+       aes(map_id = region), fill = "white", color = 'grey', linewidth = 0.25) + 
        labs(title = sprintf("World Happiness Report: %s", Year[i]), #Adding labels
        subtitle = "Life Evaluation based on Cantril Ladder where 0 = Worst Possible Life,
        10 = Best Possible Life",
@@ -290,27 +305,25 @@ for(i in 1:11) {
              axis.text.y = element_blank())
   
   #Plotting happiness scores onto the map
-  p_out <- p + geom_map(map = World_Map_Joined, aes(map_id = region, fill = Happiness_Score), 
-           linewidth = 0.25) + #Plotting happiness score onto map
+  p_out <- p + geom_map(map = World_Map_Joined, aes(map_id = region, 
+                        fill = Happiness_Score), linewidth = 0.25) + 
+          #Filling countries based on happiness score
            scale_fill_gradient2(low = "#0D47A1", high = "#FFEB3B", mid = "#BBDEFB", 
-                                midpoint = 5, name = name, limits = c(2, 8)) + #Filling countries based on happiness score
+                                midpoint = 5, name = name, limits = c(2, 8)) + 
            coord_fixed(1.5) #Fixing aspect ratio
   
   print(p_out)
   
   #Saving each plot
   ggsave(here("Figures", file=paste0("plot_", 2010 + i,".png")))
+  
 }
 
 ```
 
 One of the plots generated by the for loop has been included in this document however, the visualisation has been animated into a GIF which can be seen on my GitHub pages. 
 ```{r, image2, echo=FALSE}
-#Path image
-map2011 <- '/Users/millieziebland/Documents/Uni/Semester 2/PSY6422 Data Analysis and Visualisation/PSY6422 Project/Figures/plot_2011.png'
-
-#Display image
-knitr::include_graphics(map2011)
+knitr::include_graphics("Figures/plot_2011.png")
 ```
 
 **Aim 2 = How has happiness changed over the last 10 years?**  
@@ -321,7 +334,7 @@ Next, the average national income per capita data is loaded to visualise the rel
 
 ### Loading Average Income Data
 ```{r, Income Data}
-#---------------------------------LOADING AVERAGE INCOME DATA--------------------
+#----------------------LOADING AVERAGE INCOME DATA-------------------------------
 #Loading the data
 Average_Income <- read.csv(here("Data", "HumanDevelopmentReport.csv"))
 
@@ -403,29 +416,34 @@ write_csv(final_codebook, "./data/codebook.csv")
 #----------------------------PLOTTING RICHEST COUNTRIES--------------------------
 #Selecting countries with highest incomes
 MostRich <- Joined_Data %>% 
-            arrange(desc(Average.Income)) %>% #Arrange data in descending order
-            slice(1:10) %>% #Select first 10 data points
-            mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
+            #Arrange data in descending order
+            arrange(desc(Average.Income)) %>%
+            #Select first 10 data points
+            slice(1:10) %>% 
+            #Mutate country column to display correct order
+            mutate(Country = factor(Country, levels = Country)) 
 
 #Plotting top 10 richest countries
-p_rich <- ggplot(MostRich, aes(x = reorder(Country, Average.Income) , y = Average.Income)) #Addings mappings to ggplot
+#Addings mappings to ggplot
+p_rich <- ggplot(MostRich, aes(x = reorder(Country, Average.Income) , y = Average.Income)) 
 
 p_rich <- p_rich + #Adding geom layer to ggplot
           geom_col(aes(fill=Average.Income)) + #Plotting x and y as bar chart
           coord_flip() + #Making bars horizontal
+          #Filling bars based on average income
           scale_fill_gradient2(low = "#FFF9C4", high = "#FFEB3B", mid = "#FFF176", 
-          midpoint = median(MostRich$Average.Income)) + #Filling bars based on average income
+          midpoint = median(MostRich$Average.Income)) + 
           geom_text(aes(label = dollar(Average.Income)), hjust = 1, nudge_y = -0.35, 
           color = "black") + #Adding income on top of bar
           labs(title = "Top 10 Richest Countries based on average income per capita ($)
                in 2021", #Adding labels
           x= "Country", y = "Average Income Per Capita ($)", 
           caption = "Source: United Nations Development Programme") +
-          theme_bw() + #Setting plot theme: bold title, move title, remove background, remove legend 
-          theme(plot.title = element_text(face = "bold"), 
-                plot.title.position = "plot", 
-                panel.border = element_blank(), 
-                legend.position="none")
+          theme_bw() + #Setting plot theme
+          theme(plot.title = element_text(face = "bold"), #Make title bold
+                plot.title.position = "plot", #Change title position
+                panel.border = element_blank(), #Remove background
+                legend.position="none") #Remove legend
 
 #Saving the plot
 ggsave(here("Figures", "Top 10 Richest Countries.png"), plot = p_rich)
@@ -439,17 +457,20 @@ MostPoor <- Joined_Data %>%
     arrange(Average.Income) %>% 
     slice(1:10) %>% 
     arrange(desc(Average.Income)) %>% 
-    mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
+    #Mutate country column to display correct order
+    mutate(Country = factor(Country, levels = Country)) 
 
 #Plotting top 10 poorest countries
-p_poor <- ggplot(MostPoor, aes(x = Country, y = Average.Income)) #Adding mappings to ggplot
+#Adding mappings to ggplot
+p_poor <- ggplot(MostPoor, aes(x = Country, y = Average.Income)) 
 
 p_poor <- p_poor +
           geom_col(aes(fill=Average.Income)) +
           coord_flip() +
           scale_fill_gradient2(low = "#0D47A1", high = "#BBDEFB", mid = "#2196F3", 
           midpoint = median(MostPoor$Average.Income)) + 
-          geom_text(aes(label = dollar(Average.Income)), hjust = -0.5, color = "black") + #Adding income next to bar
+          #Adding income next to bar
+          geom_text(aes(label = dollar(Average.Income)), hjust = -0.5, color = "black") + 
           ylim(0, 90000) + #Setting scale to match top 10 rich countries bar chart
           labs(title = "Top 10 Poorest Countries based on average income per capita ($) 
                in 2021", 
@@ -492,14 +513,17 @@ Joined_Data <- Joined_Data %>%
                                "Happiness Score: ", round(Happiness_Score, 3), "\n",
                                "Average Income: ", dollar(Average.Income)))
 
-#Creating scatterplot - ggiraph package is used to make scatterplot interactive - when mouse hovers over points on the plot, country name, happiness score and average income will be visible
+#Creating scatterplot - ggiraph package is used to make scatterplot interactive -
+#when mouse hovers over points on the plot, country name, happiness score and 
+#average income will be visible
 p_both <- ggplot(Joined_Data, aes(Average.Income, Happiness_Score)) +
           scale_colour_manual(values=c("#FFCC00", "red", "#339000", "black", "#3999FF")) +
           geom_point_interactive(aes(col = continent, #Make scatterplot with hover text
                                        tooltip = tooltip_text)) +
           geom_smooth(method="lm", formula= y ~ log(x), se = FALSE, color = "black", 
                       size = 0.5) + #Add logarithmic regression line
-          labs(title = "The Relationship Between Average Income and Happiness Score", #Add labels
+          #Add labels
+          labs(title = "The Relationship Between Average Income and Happiness Score", 
                subtitle = "Data from 104 countries in 2021",
                x = "Average Net National Income Per Capita, US($)", 
                y = "Happiness Score",

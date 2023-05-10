@@ -7,7 +7,7 @@ output:
   html_document: default
 
 ---
-```{r, echo=FALSE, out.width = "80%", fig.align = "center"}
+```{r, echo=FALSE, out.width = "70%", fig.align = "center"}
 knitr::include_graphics("Figures/Buy_Happiness.jpeg")
 ```
 
@@ -150,13 +150,11 @@ Average <- HappinessReport %>%
 ```{r, p_top10}
 #Select top 10 happiest countries on average
 Top10 <- Average %>% 
-            #Arrange happiness score in descending order
-            arrange(desc(Happiness_Score)) %>% 
-            slice(1:10) %>% #Select the first 10 data points
-            #Rearranging happiness score so highest score is plotted first
-            arrange(Happiness_Score) %>% 
-            #Mutate country column to display correct order
-            mutate(Country = factor(Country, levels = Country)) 
+            
+            arrange(desc(Happiness_Score)) %>% #Arrange happiness score in descending order
+            slice(1:10) %>%  #Select the first 10 data points
+            arrange(Happiness_Score) %>% #Rearranging score = highest plotted first
+            mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
 
 #Plot top 10 happiest countries
 p_top10 <- ggplot(Top10, aes(Country, Happiness_Score, fill = Happiness_Score)) #Add mappings to ggplot
@@ -187,9 +185,9 @@ ggsave(here("Figures", "Top 10 Happiest Countries.png"), plot = p_top10)
 ```{r, p_least10}
 #Finding top 10 least happy countries
 Least10 <- Average %>% 
-              arrange(Happiness_Score) %>%  #Arrange happiness score in ascending order
+              arrange(Happiness_Score) %>% #Arrange happiness score in ascending order
               slice(1:10) %>% #Select the first 10 data points
-  arrange(desc(Happiness_Score)) %>% #Rearranging scores so they are plotted from lowest to highest
+              arrange(desc(Happiness_Score)) %>% #Rearranging scores = plot lowest to highest
               mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
 
 #Plotting top 10 least happy countries
@@ -217,7 +215,7 @@ p_least10 <- p_least10 +  #Add geom layer to ggplot
 ggsave(here("Figures", "Top 10 Least Happy Countries.png"), plot = p_least10)
 
 #The following was included in the rMarkdown code block to plot each graph side by side 
-#{r, echo=FALSE, figures-side, fig.show="hold", out.width="50%"}
+#{r, echo=FALSE, fig.show="hold", out.width="50%"}
 ```
 
 ```{r, show plot, echo=FALSE, fig.show="hold", out.width="50%"}
@@ -250,8 +248,9 @@ HappinessReport$Country <- recode(HappinessReport$Country,
 
 #### Plotting the choropleth map
 ```{r, animation.hook='gifski', interval=1, fig.align='center', out.width="110%"}
-#---------------------------------PLOTTING CHOROPLETH MAP----------------------------------------------
-#The following line of code was included in the rmarkdown code block to combine the plots into a GIF {r, animation.hook='gifski', interval=1, fig.align='center', out.width="110%"}
+#-------------------------PLOTTING CHOROPLETH MAP--------------------------------
+#The following line of code was included in the rmarkdown code block to combine the plots into a GIF 
+#{r, animation.hook='gifski', interval=1, fig.align='center', out.width="110%"}
 
 #Wrapping legend title for plotted map
 name <- c("Average Happiness Score")
@@ -278,8 +277,7 @@ for(i in 1:11) {
        geom_map(dat = world_map, map = world_map, #Plotting countries on map
        aes(map_id = region), fill = "white", color = 'grey', linewidth = 0.25) + #Filling in the countries
        labs(title = sprintf("World Happiness Report: %s", Year[i]), #Adding labels
-       subtitle = "Life Evaluation based on Cantril Ladder where 0 = Worst Possible Life, 
-       10 = Best Possible Life",
+       subtitle = "Life Evaluation based on Cantril Ladder: 0 = Worst Possible Life, 10 = Best Possible Life",
        caption = "Source: World Happiness Report, Gallup World Poll") +
        theme(plot.title = element_text(face = "bold"),
              axis.title = element_blank(), #Removing x and y labels
@@ -303,7 +301,7 @@ for(i in 1:11) {
 
 
 **Aim 2 = How has happiness changed over the last 10 years?**  
-The use of the gradient colour scale ranging from blue (representing sadness) to yellow (representing happiness), shows the substantial variation in happiness ratings across the world. The choropleth map shows that North America, Oceania and Europe have had consistently high happiness ratings over the last 10 years. However, the brightness of the yellow decreases throughout the years suggesting happiness has decreased over the 10 years.In contrast, there is a lot of inconsistency in scores for countries located in Africa and Asia, made visible by the blue colours as well as the frequent changes in colour. 
+The use of the gradient colour scale ranging from blue (representing sadness) to yellow (representing happiness), shows the substantial variation in happiness ratings across the world. The choropleth map shows that North America, Oceania and Europe have had consistently high happiness ratings over the last 10 years. However, the brightness of the yellow decreases throughout the years suggesting happiness has decreased over the 10 years. In contrast, there is a lot of inconsistency in scores for countries located in Africa and Asia, made visible by the blue colours as well as the frequent changes in colour. 
 
 ## **Visualisation 3: Top 10 Richest and Poorest Countries on Average in 2021**
 Next, the average national income per capita data is loaded to visualise the relationship with happiness ratings.
@@ -397,7 +395,8 @@ MostRich <- Joined_Data %>%
             mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
 
 #Plotting top 10 richest countries
-p_rich <- ggplot(MostRich, aes(x = reorder(Country, Average.Income) , y = Average.Income)) #Addings mappings to ggplot
+#Addings mappings to ggplot
+p_rich <- ggplot(MostRich, aes(x = reorder(Country, Average.Income) , y = Average.Income)) 
 
 p_rich <- p_rich + #Adding geom layer to ggplot
           geom_col(aes(fill=Average.Income)) + #Plotting x and y as bar chart
@@ -406,8 +405,7 @@ p_rich <- p_rich + #Adding geom layer to ggplot
           midpoint = median(MostRich$Average.Income)) + #Filling bars based on average income
           geom_text(aes(label = dollar(Average.Income)), hjust = 1, nudge_y = -0.35, 
           color = "black") + #Adding income on top of bar
-          labs(title = "Top 10 Richest Countries based on average income per capita ($)
-               in 2021", #Adding labels
+          labs(title = "Top 10 Richest Countries based on average income per capita ($) in 2021", #Adding labels
           x= "Country", y = "Average Income Per Capita ($)", 
           caption = "Source: United Nations Development Programme") +
           theme_bw() + #Setting plot theme: bold title, move title, remove background, remove legend 
@@ -438,10 +436,9 @@ p_poor <- p_poor +
           coord_flip() +
           scale_fill_gradient2(low = "#0D47A1", high = "#BBDEFB", mid = "#2196F3", 
           midpoint = median(MostPoor$Average.Income)) + 
-          geom_text(aes(label = dollar(Average.Income)), hjust = -0.5, color = "black") + #Adding income next to bar
+          geom_text(aes(label = dollar(Average.Income)), hjust = -0.5, color = "black") + #Income next to bar
           ylim(0, 90000) + #Setting scale to match top 10 rich countries bar chart
-          labs(title = "Top 10 Poorest Countries based on average income per capita ($) 
-               in 2021", 
+          labs(title = "Top 10 Poorest Countries based on average income per capita ($) in 2021", 
           x= "Country", y = "Average Income Per Capita ($)", 
           caption = "Source: United Nations Development Programme") +
           theme_bw() +
@@ -484,9 +481,9 @@ Joined_Data <- Joined_Data %>%
 #Creating scatterplot - ggiraph package is used to make scatterplot interactive - when mouse hovers over points on the plot, country name, happiness score and average income will be visible
 p_both <- ggplot(Joined_Data, aes(Average.Income, Happiness_Score)) +
           scale_colour_manual(values=c("#FFCC00", "red", "#339000", "black", "#3999FF")) +
-          geom_point_interactive(aes(col = continent, #Make scatterplot with hover text
-                                       tooltip = tooltip_text)) +
-          geom_smooth(method="lm", formula= y ~ log(x), se = FALSE, color = "black", size = 0.5) + #Add logarithmic regression line
+          geom_point_interactive(aes(col = continent, tooltip = tooltip_text)) + #Make scatterplot with hover text
+          #Add logarithmic regression line
+          geom_smooth(method="lm", formula= y ~ log(x), se = FALSE, color = "black", size = 0.5) + 
           labs(title = "The Relationship Between Average Income and Happiness Score", #Add labels
                subtitle = "Data from 104 countries in 2021",
                x = "Average Net National Income Per Capita, US($)", 
@@ -511,7 +508,7 @@ Using the Olympic colours to represent each continent, the scatterplot confirms 
 It would seem that money *can* buy happiness but only up to a certain point. The regression line shows a rapid initial increase before beginning to plateau, suggesting that money can make you happy up until a certain point but after that, increasing your income will have no further effect on happiness. This finding is in support of [Kahneman and Deaton (2010)](https://doi.org/10.1073/pnas.1011492107) who found that well-being levels increased with income up until $75,000 before plateauing. [Killingsworth (2021)](https://www.washingtonpost.com/business/2023/03/08/money-wealth-happiness-study/) state that for the most part, larger incomes are associated with greater happiness. However, there is an exception for rich people who are unhappy or depressed, where more money simply does not help. 
 
 ### **Limitations and Future Directions**
-It is important to consider other factors which may also be contributing to the happiness scores as happiness isn't entirely dependent on money. The countries with the lowest happiness ratings are mainly third world countries whilst the highest rated countries are mostly first world countries and consequently, there might be many other factors contributing to the happiness scores. Other contributing factors may include war, quality of life, health etc. 
+It is important to consider other factors which may also be contributing to the happiness scores as happiness isn't entirely dependent on money. The countries with the lowest happiness ratings are mainly third world countries whilst the highest rated countries are mostly first world countries and consequently, there are likely to be many other factors contributing to the happiness scores. Other contributing factors may include war, quality of life, access to healthcare etc. 
 
 The happiness data set included several variables which contributed to the overall happiness score but due to the time constraints of this module, only the overall happiness score was visualised. Future visualisations using this data could explore the contributors to the happiness score to see which variables had the biggest impact on well-being. 
 
