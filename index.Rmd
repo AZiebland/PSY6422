@@ -48,10 +48,12 @@ Average income data was sourced from the human development index. Gross National
 #install.packages("ggiraph")
 #install.packages("Hmisc")
 #install.packages("kableExtra")
+#install.packages("extrafont")
 library(readxl) #Read excel file
 library(tidyverse) #Transform and better present data
 library(dplyr) #Makes data manipulation easier
 library(ggplot2) #Create plots from a data frame
+library(extrafont) #Fonts used for ggplot
 library(here) #Finds projects file based on current working directory
 library(maps) #Source of geospatial data 
 library(stringr) #Used for wrapping legend titles
@@ -63,6 +65,10 @@ library(ggiraph) #Used to create interactive scatterplot with hover text
 library(Hmisc) #Used to add labels to variables
 library(tibble) #Extract labels from data frame and add into new column
 library(kableExtra) #Formatting table for PDF output
+
+#Loading fonts
+font_import()
+loadfonts(device = "win", quiet = TRUE)
 ```
 
 ### Loading Happiness Data
@@ -171,7 +177,8 @@ p_top10 <- p_top10 +           #Add geom layer to ggplot
            y = "Average Happiness Score", 
            caption = "Source: World Happiness Report, Gallup World Poll") + 
            theme_bw() + #Setting plot theme
-           theme(plot.title = element_text(face = "bold"), #bold title
+           theme(text = element_text(family = "Arial"), #change font
+             plot.title = element_text(face = "bold"), #bold title
                  plot.title.position = "plot", #move title
                  panel.border = element_blank(), #remove background
                  legend.position="none") #remove legend
@@ -206,10 +213,11 @@ p_least10 <- p_least10 +  #Add geom layer to ggplot
              y = "Average Happiness Score", 
              caption = "Source: World Happiness Report, Gallup World Poll") + 
              theme_bw() + #Set plot theme
-             theme(plot.title = element_text(face = "bold"), #bold title
-                 plot.title.position = "plot", #move title
-                 panel.border = element_blank(), #remove background
-                 legend.position="none") #remove legend
+             theme(text = element_text(family = "Arial"), #change font
+                   plot.title = element_text(face = "bold"), #bold title
+                   plot.title.position = "plot", #move title
+                   panel.border = element_blank(), #remove background
+                   legend.position="none") #remove legend
                    
 #Saving the plot
 ggsave(here("Figures", "Top 10 Least Happy Countries.png"), plot = p_least10)
@@ -279,7 +287,8 @@ for(i in 1:11) {
        labs(title = sprintf("World Happiness Report: %s", Year[i]), #Adding labels
        subtitle = "Life Evaluation based on Cantril Ladder: 0 = Worst Possible Life, 10 = Best Possible Life",
        caption = "Source: World Happiness Report, Gallup World Poll") +
-       theme(plot.title = element_text(face = "bold"),
+       theme(text = element_text(family = "Arial"),
+             plot.title = element_text(face = "bold"),
              axis.title = element_blank(), #Removing x and y labels
              axis.text.x = element_blank(), 
              axis.text.y = element_blank())
@@ -409,7 +418,8 @@ p_rich <- p_rich + #Adding geom layer to ggplot
           x= "Country", y = "Average Income Per Capita ($)", 
           caption = "Source: United Nations Development Programme") +
           theme_bw() + #Setting plot theme: bold title, move title, remove background, remove legend 
-          theme(plot.title = element_text(face = "bold"), 
+          theme(text = element_text(family = "Arial"),
+                plot.title = element_text(face = "bold"), 
                 plot.title.position = "plot", 
                 panel.border = element_blank(), 
                 legend.position="none")
@@ -442,7 +452,8 @@ p_poor <- p_poor +
           x= "Country", y = "Average Income Per Capita ($)", 
           caption = "Source: United Nations Development Programme") +
           theme_bw() +
-          theme(plot.title = element_text(face = "bold"), #Setting the plot theme
+          theme(text = element_text(family = "Arial"),
+                plot.title = element_text(face = "bold"), #Setting the plot theme
                 plot.title.position = "plot",
                 panel.border = element_blank(),
                 legend.position="none")
@@ -490,7 +501,8 @@ p_both <- ggplot(Joined_Data, aes(Average.Income, Happiness_Score)) +
                y = "Happiness Score",
                caption = "Source: World Happiness Report, United Nations Development Programme",
                color = "Continent") +
-           theme(plot.title = element_text(face = "bold"), #Make title bold
+           theme(text = element_text(family = "Arial"),
+                 plot.title = element_text(face = "bold"), #Make title bold
                  plot.title.position = "plot") #Move title position
 
 #Saving the plot 
