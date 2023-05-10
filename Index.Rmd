@@ -1,10 +1,10 @@
 ---
 title: "Can Money Buy Happiness?"
-author: '220225410'
-date: "2023-03-29"
+subtitle: "PSY6422 Project"
+author: 'Amelia Ziebland'
+date: "2023-05-16"
 output:
   html_document: default
-subtitle: PSY6422 Project
 
 ---
 ```{r, echo=FALSE, out.width = "80%", fig.align = "center"}
@@ -129,7 +129,7 @@ codebook <- codebook[, col_order]
 knitr::kable(codebook) %>% 
   column_spec(1, width = "10em")%>%
     column_spec(2, width = "6em")%>% 
-    column_spec(3, width = "35em")
+    column_spec(3, width = "50em")
 ```
 
 ## **Visualisation 1: Happiest and Least Happy Countries on Average Between 2011-2021**
@@ -150,10 +150,13 @@ Average <- HappinessReport %>%
 ```{r, p_top10}
 #Select top 10 happiest countries on average
 Top10 <- Average %>% 
-            arrange(desc(Happiness_Score)) %>% #Arrange happiness score in descending order
+            #Arrange happiness score in descending order
+            arrange(desc(Happiness_Score)) %>% 
             slice(1:10) %>% #Select the first 10 data points
-            arrange(Happiness_Score) %>% #Rearranging happiness score so highest score is plotted first
-            mutate(Country = factor(Country, levels = Country)) #Mutate country column to display correct order
+            #Rearranging happiness score so highest score is plotted first
+            arrange(Happiness_Score) %>% 
+            #Mutate country column to display correct order
+            mutate(Country = factor(Country, levels = Country)) 
 
 #Plot top 10 happiest countries
 p_top10 <- ggplot(Top10, aes(Country, Happiness_Score, fill = Happiness_Score)) #Add mappings to ggplot
@@ -375,7 +378,7 @@ codebook2 <- codebook2[, col_order]
 knitr::kable(codebook2) %>% 
   column_spec(1, width = "10em")%>%
     column_spec(2, width = "6em")%>% 
-    column_spec(3, width = "35em")
+    column_spec(3, width = "50em")
 
 #Joining codebooks for both data sets
 final_codebook <- full_join(codebook, codebook2)
