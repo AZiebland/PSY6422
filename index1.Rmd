@@ -1,6 +1,5 @@
 ---
 title: "Can Money Buy Happiness?"
-author: 'Amelia Ziebland'
 output:
   pdf_document: default
   includes:
@@ -552,7 +551,7 @@ Using the Olympic colours to represent each continent, the scatterplot confirms 
 It would seem that money *can* buy happiness but only up to a certain point. The regression line shows a rapid initial increase before beginning to plateau, suggesting that money can make you happy up until a certain point but after that, increasing your income will have no further effect on happiness. This finding is in support of [Kahneman and Deaton (2010)](https://doi.org/10.1073/pnas.1011492107) who found that well-being levels increased with income up until $75,000 before plateauing. [Killingsworth (2021)](https://www.washingtonpost.com/business/2023/03/08/money-wealth-happiness-study/) state that for the most part, larger incomes are associated with greater happiness. However, there is an exception for rich people who are unhappy or depressed, where more money simply does not help. 
 
 ### **Limitations and Future Directions**
-It is important to consider other factors which may also be contributing to the happiness scores as happiness isn't entirely dependent on money. The countries with the lowest happiness ratings are mainly third world countries whilst the highest rated countries are mostly first world countries and consequently, there might be many other factors contributing to the happiness scores. Other contributing factors may include war, quality of life, health etc. 
+It is important to consider other factors which may also be contributing to the happiness scores as happiness isn't entirely dependent on money. The countries with the lowest happiness ratings are mainly third world countries whilst the highest rated countries are mostly first world countries and consequently, there are likely to be many other factors contributing to the happiness scores. Other contributing factors may include war, quality of life, health etc. 
 
 The happiness data set included several variables which contributed to the overall happiness score but due to the time constraints of this module, only the overall happiness score was visualised. Future visualisations using this data could explore the contributors to the happiness score to see which variables had the biggest impact on well-being. 
 
