@@ -1,6 +1,6 @@
 ---
 title: "Can Money Buy Happiness?"
-author: "Amelia Ziebland"
+author: "220225410"
 date: "2023-05-16"
 output:
   html_document: default
